@@ -1,5 +1,6 @@
 package br.com.jb;
 
+import javafx.scene.robot.Robot;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
@@ -11,13 +12,16 @@ public class EcacVO {
 
   private String url;
 
+  private Robot robot;
+
   public EcacVO() {}
 
   @SuppressWarnings("exports")
-  public EcacVO(Stage stage, WebView webView, String url) {
+  public EcacVO(Stage stage, WebView webView, String url, Robot robot) {
     this.stage = stage;
     this.WebView = webView;
     this.url = url;
+    this.robot = robot;
   }
 
   @SuppressWarnings("exports")
@@ -46,5 +50,15 @@ public class EcacVO {
 
   public void setUrl(String url) {
     this.url = url;
+  }
+
+  @SuppressWarnings("exports")
+  public Robot getRobot() {
+    return robot;
+  }
+
+  @SuppressWarnings("exports")
+  public void setRobot(Robot robot) {
+    this.robot = robot;
   }
 }
