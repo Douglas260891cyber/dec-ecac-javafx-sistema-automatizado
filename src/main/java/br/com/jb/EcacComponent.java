@@ -19,63 +19,43 @@ public class EcacComponent {
     Stage stage = vo.getStage();
     stage.setX(0);
     stage.setY(0);
-    stage.setWidth(1000);
-    stage.setHeight(800);
+    stage.setMaximized(false);
 
     Scene scene = new Scene(vo.getWebView(), 1100, 800);
     vo.getStage().setScene(scene);
     vo.getStage().show();
 
-    gerenciarTimerMovClick(vo);
+    gerenciarTimerMovClick(vo, 800, 350);
   }
 
-  //Gerencia movimentação e click do mouse
-  public void gerenciarTimerMovClick(EcacVO vo) {
+  public void gerenciarTimerMovClick(EcacVO vo, Integer x, Integer y) {
+    Integer initialDelay = valorRandomico() * 5; // Pausa aleatória antes de iniciar a ação de movimento
+
     new Timer()
       .schedule(
         new TimerTask() {
           @Override
           public void run() {
-            for (int i = 0; i < 3; i++) {
-              Integer x = valorRandomico();
-              Integer y = valorRandomico();
-              //Gera novos valores randomicos para o movimento do cursor antes do clique.
-              new Timer()
-                .schedule(
-                  new TimerTask() {
-                    @Override
-                    public void run() {
-                      moverMouse(x, y, vo, false);
-                    }
-                  },
-                  valorRandomico()
-                );
-            }
-            moverMouse(800, 350, vo, true);
+            moverMouse(x, y, vo);
           }
         },
-        valorRandomico()
+        initialDelay
       );
   }
 
-  private void moverMouse(
-    Integer finalX,
-    Integer finalY,
-    EcacVO vo,
-    Boolean vaiClicar
-  ) {
+  private void moverMouse(Integer finalX, Integer finalY, EcacVO vo) {
+    Random random = new Random();
     try {
-      Double sceneX = vo.getStage().getX() + vo.getStage().getScene().getX();
-      Double sceneY = vo.getStage().getY() + vo.getStage().getScene().getY();
-
-      final Integer steps = 15; // Número de etapas para a animação
-      final Double deltaX = (finalX - sceneX) / steps; // Calcula o incremento horizontal por etapa
-      final Double deltaY = (finalY - sceneY) / steps; // Calcula o incremento vertical por etapa
+      double sceneX = vo.getStage().getX() + vo.getStage().getScene().getX();
+      double sceneY = vo.getStage().getY() + vo.getStage().getScene().getY();
+      final int steps = 5; // Número de etapas para a animação
+      final double deltaX = (finalX - sceneX) / (double) steps; // Calcula o incremento horizontal por etapa
+      final double deltaY = (finalY - sceneY) / (double) steps; // Calcula o incremento vertical por etapa
 
       // Executa as etapas de animação
       for (int i = 1; i <= steps; i++) {
-        final Double currentX = sceneX + deltaX * i;
-        final Double currentY = sceneY + deltaY * i;
+        double currentX = sceneX + deltaX * i;
+        double currentY = sceneY + deltaY * i;
         final int finalXStep = (int) (
           currentX - vo.getStage().getScene().getX()
         );
@@ -83,15 +63,19 @@ public class EcacComponent {
           currentY - vo.getStage().getScene().getY()
         );
 
-        final int stepIndex = i; // Mantém o índice da etapa como final para uso dentro da lambda
+        final int stepIndex = i;
+        double acceleration = 1 - Math.cos((stepIndex * Math.PI) / steps);
+        int moveDelay = (int) (100 + 200 * acceleration); // Varia o atraso entre 100ms e 300ms conforme a aceleração
+        int randomPause = random.nextInt(300); // Pausa aleatória entre 0ms e 300ms
+
         Platform.runLater(() -> {
           vo.getRobot().mouseMove(finalXStep, finalYStep);
-          if (vaiClicar && stepIndex == steps) { // Clica apenas no último passo
-            simularClique(vo, finalX, finalY); // Clica nas coordenadas finais
+          if (stepIndex == steps) {
+            clicar(vo, finalX, finalY);
           }
         });
 
-        Thread.sleep(100); // Adiciona um pequeno atraso entre as etapas (simulando uma animação mais suave)
+        Thread.sleep(moveDelay + randomPause);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -99,7 +83,7 @@ public class EcacComponent {
   }
 
   // Simula um clique na posição
-  private void simularClique(EcacVO vo, int x, int y) {
+  private void clicar(EcacVO vo, int x, int y) {
     Platform.runLater(() -> {
       try {
         vo.getRobot().mouseMove(x, y);
@@ -116,7 +100,6 @@ public class EcacComponent {
 
   private Integer valorRandomico() {
     Random random = new Random();
-    Integer valor = random.nextInt(15000 - 1000 + 1) + 1000;
-    return valor;
+    return random.nextInt(4000);
   }
 }
