@@ -1,5 +1,8 @@
 package br.com.jb;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,20 +15,25 @@ import javafx.stage.Stage;
 public class EcacComponent {
 
   public void start(EcacVO vo) {
+    System.setProperty(
+      "http.agent",
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.9999.99 Safari/537.36"
+    );
+
     WebEngine webEngine = vo.getWebView().getEngine();
+    CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
     webEngine.load(vo.getUrl());
     webEngine.setJavaScriptEnabled(false);
 
     Stage stage = vo.getStage();
     stage.setX(0);
     stage.setY(0);
-    stage.setMaximized(false);
 
     Scene scene = new Scene(vo.getWebView(), 1100, 800);
     vo.getStage().setScene(scene);
     vo.getStage().show();
 
-    gerenciarTimerMovClick(vo, 800, 350);
+    gerenciarTimerMovClick(vo, 810, 350);
   }
 
   public void gerenciarTimerMovClick(EcacVO vo, Integer x, Integer y) {

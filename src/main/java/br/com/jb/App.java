@@ -7,8 +7,12 @@ public class App extends Application {
 
   @Override
   public void start(@SuppressWarnings("exports") Stage stage) {
-    EcacController controller = new EcacController();
-    controller.ecac(stage);
+    try {
+      EcacController controller = new EcacController();
+      controller.ecac(stage);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   public static void main(String[] args) {
