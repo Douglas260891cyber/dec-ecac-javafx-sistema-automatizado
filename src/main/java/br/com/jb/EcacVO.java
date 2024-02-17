@@ -16,7 +16,6 @@ public class EcacVO {
 
   public EcacVO() {}
 
-  @SuppressWarnings("exports")
   public EcacVO(Stage stage, WebView webView, String url, Robot robot) {
     this.stage = stage;
     this.WebView = webView;
@@ -24,22 +23,18 @@ public class EcacVO {
     this.robot = robot;
   }
 
-  @SuppressWarnings("exports")
   public Stage getStage() {
     return this.stage;
   }
 
-  @SuppressWarnings("exports")
   public void setStage(Stage stage) {
     this.stage = stage;
   }
 
-  @SuppressWarnings("exports")
   public WebView getWebView() {
     return this.WebView;
   }
 
-  @SuppressWarnings("exports")
   public void setWebView(WebView webView) {
     this.WebView = webView;
   }
@@ -52,12 +47,10 @@ public class EcacVO {
     this.url = url;
   }
 
-  @SuppressWarnings("exports")
   public Robot getRobot() {
     return robot;
   }
 
-  @SuppressWarnings("exports")
   public void setRobot(Robot robot) {
     this.robot = robot;
   }
